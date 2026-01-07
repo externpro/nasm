@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.31)
 set(CMAKE_PROJECT_TOP_LEVEL_INCLUDES .devcontainer/cmake/xproinc.cmake)
 project(nasm VERSION 2.14.02)
-include(xpflags)
-include(GNUInstallDirs)
-set(XP_INSTALL_CMAKEDIR ${CMAKE_INSTALL_DATADIR}/cmake)
 include(ExternalProject)
 set_property(DIRECTORY PROPERTY "EP_BASE" ${CMAKE_BINARY_DIR}/epbase)
 if(WIN32 AND NOT UNIX)
@@ -19,9 +16,12 @@ if(WIN32 AND NOT UNIX)
       <SOURCE_DIR>/LICENSE <INSTALL_DIR>/share/LICENSE
     INSTALL_COMMAND ""
     )
-  xpPackageDevel(EXE_PATH bin/nasm)
+  set(exePath EXE_PATH bin/nasm)
   ExternalProject_Get_Property(${PROJECT_NAME} INSTALL_DIR)
   install(DIRECTORY ${INSTALL_DIR}/ DESTINATION . USE_SOURCE_PERMISSIONS)
-else()
-  xpPackageDevel()
 endif()
+xpExternPackage(${exePath} BASE v0 XPDIFF "bin"
+  WEB "https://www.nasm.us/"
+  DESC "The Netwide Assembler - an 80x86 and x86-64 assembler (MSW-only)"
+  LICENSE "[BSD-2-Clause](https://www.nasm.us/ 'BSD 2-Clause Simplified License')"
+  )
